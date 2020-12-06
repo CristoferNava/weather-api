@@ -1,10 +1,7 @@
 import {useState} from 'react';
 
-const Form = () => {
-  const [search, setSearch] = useState({
-    city: '',
-    country: '',
-  });
+const Form = ({search, setSearch, setConsumeAPI}) => {
+  const [error, setError] = useState(false);
 
   const {city, country} = search;
 
@@ -15,9 +12,25 @@ const Form = () => {
     });
   };
 
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    // Validate the data
+    if (city.trim() === '' || country.trim() === '') {
+      setError(true);
+      return;
+    }
+    setError(false);
+
+    // pass the data to the main component
+    setConsumeAPI(true);
+  };
+
   return (
     <form
+      onSubmit={handleSubmit}
     >
+      {error ? <p className="red darken-4 error">Todos los campos son obligatorios</p> : null}
       <div className="input-field col s12">
         <input 
           type="text"
@@ -46,6 +59,14 @@ const Form = () => {
           <option value="PE">Perú</option>
         </select>
         <label htmlFor="country">País: </label>
+      </div>
+
+      <div className="input-field col s12">
+        <input 
+          type="submit"
+          value="Buscar Clima"
+          className="waves-effect waves-light btn-large btn-block yellow accent-4"
+        />
       </div>
     </form>
   );
